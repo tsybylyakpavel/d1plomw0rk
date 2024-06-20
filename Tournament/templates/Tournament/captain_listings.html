@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container mt-4">
+    <form method="GET" action="{% url 'captain_tourney_listings' %}">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="input-group" style="max-width: 600px;">
+                <input type="text" class="form-control" placeholder="Поиск соревнований" name="search" value="{{ request.GET.search }}">
+                <button class="btn btn-primary" type="submit">Поиск</button>
+            </div>
+        </div>
+    </form>
+    
+    <div class="grid-container">
+        {% for item in tourneys_with_status %}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <h4 class="card-title">{{ item.tourney.name }}</h4>
+                <p class="m-gone"><strong>Организатор: </strong><strong>{{ item.tourney.user.profile.organization_name }}</strong></p>
+                <p class="m-gone">Количество команд: {{ item.tourney.num_teams }}</p>
+                <p class="m-gone">Формат проведения: {% if item.tourney.tournament_type == 'SE' %}Олимпийская система{% else %}С двойным выбыванием{% endif %}</p>
+                <p class="m-gone">Вид спорта:
+                    {% if item.tourney.sport == 'football' %}
+                        Футбол
+                    {% elif item.tourney.sport == 'tennis' %}
+                        Теннис
+                    {% elif item.tourney.sport == 'boxing' %}
+                        Бокс
+                    {% elif item.tourney.sport == 'badminton' %}
+                        Бадминтон
+                    {% elif item.tourney.sport == 'volleyball' %}
+                        Волейбол
+                    {% elif item.tourney.sport == 'basketball' %}
+                        Баскетбол
+                    {% elif item.tourney.sport == 'handball' %}
+                        Гандбол
+                    {% elif item.tourney.sport == 'esports' %}
+                        Киберспорт
+                    {% elif item.tourney.sport == 'hockey' %}
+                        Хоккей
+                    {% elif item.tourney.sport == 'rugby' %}
+                        Регби
+                    {% endif %}
+                </p>
+                <p>Дата проведения: {{ item.tourney.start_date }} - {{ item.tourney.end_date }}</p>
+                <p>Статус заявки: 
+                    {% if item.status == 'P' %}
+                        В ожидании
+                    {% elif item.status == 'A' %}
+                        Принята
+                    {% elif item.status == 'R' %}
+                        Отклонена
+                    {% endif %}
+                </p>
+                <div class="button-group-horizontal">
+                    <a href="{% url 'tourney' item.tourney.id %}" class="btn btn-primary listing-btn page-animation">Открыть</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-3 mb-1">
+        {% if tourneys_with_status.has_previous %}
+            <a class="btn btn-outline-dark" href="?page=1">Первая</a>
+            <a class="btn btn-outline-dark" href="?page={{ tourneys_with_status.previous_page_number }}">Предыдущая</a>
+        {% else %}
+            <button class="btn btn-outline-dark" disabled>Первая</button>
+            <button class="btn btn-outline-dark" disabled>Предыдущая</button>
+        {% endif %}
+
+        Страница: {{ tourneys_with_status.number }} из {{ tourneys_with_status.paginator.num_pages }}
+
+        {% if tourneys_with_status.has_next %}
+            <a class="btn btn-outline-dark" href="?page={{ tourneys_with_status.next_page_number }}">Следующая</a>
+            <a class="btn btn-outline-dark" href="?page={{ tourneys_with_status.paginator.num_pages }}">Последняя</a>
+        {% else %}
+            <button class="btn btn-outline-dark" disabled>Следующая</button>
+            <button class="btn btn-outline-dark" disabled>Последняя</button>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

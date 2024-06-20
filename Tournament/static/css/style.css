@@ -1,0 +1,265 @@
+/* Общие стили */
+
+
+:root {
+    --primary: #37c269;
+    --primary-hover: #3a9b57;
+    --secondary: #37c269;
+    --secondary-hover: #3a9b57;
+    --danger: #78173c;
+    --danger-hover: #58122c;
+}
+
+/* Стили для кнопок Вход и Регистрация */
+.login-btn, .register-btn {
+    padding: 8px 15px;
+    margin-left: 10px; 
+    border-radius: 15px; 
+    cursor: pointer; 
+    text-decoration: none; 
+}
+
+/* Стиль для кнопки Вход */
+.login-btn {
+    background-color: #2b4b60;
+    color: #FFFFFF; 
+}
+
+/* Стиль для кнопки Регистрация */
+.register-btn {
+    background-color: #51ed81; 
+    color: #121212; 
+}
+
+.login-btn:hover {
+    background-color: #1e3443; 
+    color: #FFFFFF; 
+}
+
+.register-btn:hover {
+    background-color: #37c269; 
+    color: #121212; 
+}
+
+.navbar-custom {
+    background-color: #13222c !important; 
+}
+
+.navbar-nav {
+    align-items: center;
+    margin-left: 20px; 
+}
+.navbar-custom .nav-link,
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-toggler-icon {
+    color: white !important; 
+}
+
+.navbar {
+    height: 70px; 
+}
+
+.navbar-brand-logo {
+    display: flex !important;
+    align-items: center; 
+    height: 100%; 
+}
+
+.navbar-brand-logo img {
+    height: 90px; 
+    margin-right: -10px;
+    margin-top: -10px; 
+    margin-bottom: -10px; 
+}
+
+.navbar-brand-logo span {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+}
+
+.m-gone {
+    margin-bottom: 0px;
+}
+
+.btn {
+    border-radius: 0 !important;
+}
+
+.btn-primary, .btn-primary:active, .btn-primary:visited {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    border-radius: 12px !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover) !important;
+}
+
+.btn-secondary, .btn-secondary:active, .btn-secondary:visited {
+    background-color: var(--secondary) !important;
+    border-color: var(--primary) !important;
+    border-radius: 12px !important;
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-hover) !important;
+}
+
+.btn-danger, .btn-danger:active, .btn-danger:visited {
+    background-color: var(--danger) !important;
+    border-radius: 12px !important;
+}
+
+.btn-danger:hover {
+    background-color: var(--danger-hover) !important;
+}
+
+.home-image {
+    border: 2px var(--primary) solid;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.nav-form .btn {
+    margin-top: -5px; 
+}
+
+
+@import url('https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap');
+
+
+body {
+     background-color: #101e25 !important;
+     background-size: 100%;
+     background-repeat: no-repeat;
+     background-position: center;
+     height: 100vh;
+}
+
+.nav-logo {
+    margin-left:10px;
+    margin-right:20px;
+}
+
+.navbar {
+    z-index: 2;
+    border-bottom: 0.5px solid black;
+}
+
+.form-inline .form-group {
+    display: inline-block;
+}
+
+.form-inline.flex-fill {
+    flex: 1;
+}
+
+.form-control[type="search"] {
+    width: 250px; 
+    max-width: 100%;
+}
+
+
+.page {
+    background: white;
+    position: fixed;
+    top: 70px;
+    left: 10%;
+    right: 10%;
+    bottom: 0;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+
+.form-group-horizontal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.button-group-horizontal {
+    display: flex;
+    align-items: left;
+}
+
+.listing-btn {
+    margin-right: 15px;
+    min-width: 75px;
+}
+
+.create-tourney-form > .form-group {
+    margin-bottom: 20px;
+}
+
+.form-group-name {
+    margin-right: 20px;
+}
+
+.custom-modal .modal-dialog {
+    top: 20%;
+    max-width: 600px;
+}
+
+
+.btn-outline-dark {
+    min-width: 80px;
+}
+
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-gap: 20px;
+}
+
+
+#animation-page {
+    transition: all 0.4s ease;
+}
+
+#animation-page.out {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+#animation-page.in {
+    transform: translateY(-100%);
+    opacity: 0;
+}
+
+#animation-page.show {
+    transform: translateY(0%);
+    opacity: 1;
+}
+
+.match-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.match-form-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.match-form-label {
+    margin-right: 10px;
+}
+
+.match-form-name {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.match-form-score {
+    max-width: 100px;
+}
+
+.form-check-input {
+    margin-left: 10px;
+}

@@ -1,0 +1,59 @@
+/* Стили для страницы с профилем */
+
+body {
+    background-color: #f8f9fa;
+}
+
+.profile-container {
+    max-width: 600px;
+    margin: auto;
+}
+
+.profile-card {
+    border: none;
+    border-radius: 15px;
+    background-color: #ffffff;
+}
+
+.profile-card-body {
+    padding: 2rem;
+}
+
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 3px solid #dee2e6;
+    border-radius: 50%;
+}
+
+.profile-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+.profile-subtitle {
+    font-size: 1.5rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+.profile-text {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+}
+
+.profile-btn {
+    background-color: #d9534f;
+    border-color: #d43f3a;
+    margin-top: 1rem;
+    font-size: 1rem;
+    border-radius: 15px !important; 
+    padding: 10px 20px;
+    font-size: 1.1rem !important; 
+}
+
+.shadow-lg {
+    box-shadow: 0 0rem 0.5rem #101e25 !important;
+}

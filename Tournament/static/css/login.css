@@ -1,0 +1,99 @@
+/* Стили для страницы авторизации */
+
+
+.login-container {
+    max-width: 400px;
+    margin: 0 auto; 
+    padding: 30px;
+    border: 1px solid #51ed81; 
+    border-radius: 10px;
+    background: #0e1a21; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 120px;
+    margin-bottom: 50px;
+}
+
+.login-container h2 {
+    color: #ffffff; 
+    margin-bottom: 20px;
+}
+
+.login-form-group {
+    margin-bottom: 15px;
+}
+
+.login-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ccc; 
+}
+
+.login-form-group .form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #51ed81; 
+    border-radius: 4px;
+    background: #162928; 
+    color: #ffffff; 
+}
+
+
+.form-check {
+    display: flex;
+    align-items: center;
+}
+
+.form-check-label {
+    color: #c9d1d9; 
+    margin-left: 5px;
+}
+
+.form-text.text-muted {
+    font-size: 0.875em;
+    color: #bbb; 
+}
+
+.alert.alert-danger {
+    color: #ffffff;
+    background-color: #C62828; 
+    border-color: #b61827; 
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.button4 {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    font-size: 1.2em;
+    color: #0e1a21; 
+    background-color: #51ed81; 
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: 400;
+}
+
+.button4:hover {
+    background-color: #37c269;; 
+}
+
+.required.text-danger {
+    color: #ffcccc; 
+}
+
+.text-center {
+    color: #ffffff;
+}
+
+.text-center a {
+    color: #51ed81; 
+    text-decoration: none;
+}
+
+.text-center a:hover {
+    text-decoration: underline;
+}

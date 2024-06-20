@@ -1,0 +1,30 @@
+/* Стили для модального окна матча */
+
+.match-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.match-form-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.match-form-label {
+    margin-right: 10px;
+}
+
+.match-form-name {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.match-form-score {
+    max-width: 100px;
+}
+
+.form-check-input {
+    margin-left: 10px;
+}

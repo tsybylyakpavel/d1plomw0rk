@@ -1,0 +1,35 @@
+<!-- Профиль -->
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+<section class="profile-container mt-3">
+    <div class="profile-card shadow-lg">
+        <div class="profile-card-body text-center">
+            <img src="{% static 'images/avatar.png' %}" class="profile-avatar rounded-circle mb-0" alt="User Avatar">
+            <h1 class="profile-title card-title">
+                Профиль 
+                {% if is_organizer %}
+                    организатора
+                {% elif is_captain %}
+                    представителя команды
+                {% endif %}
+            </h1>
+            <h2 class="profile-subtitle card-subtitle mb-2 text-muted">{{ user.username }}</h2>
+            {% if is_organizer %}
+                <p class="profile-text card-text">Название организации: {{ user.profile.organization_name }}</p>
+            {% else %}
+                <p class="profile-text card-text">Имя: {{ user.first_name }}</p>
+                <p class="profile-text card-text">Фамилия: {{ user.last_name }}</p>
+            {% endif %}
+            <p class="profile-text card-text">Email: {{ user.email }}</p>
+            <p class="profile-text card-text">Последний вход: {{ user.last_login }}</p>
+            <p class="profile-text card-text">Дата регистрации: {{ user.date_joined }}</p>
+            
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="profile-btn btn btn-danger" type="submit">Выйти</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Champify</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/tourney.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bracket.css' %}">
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+</head>
+<body>
+
+<!-- Навигационное меню -->
+<nav class="navbar navbar-custom navbar-expand-lg fixed-top">
+    <div class="container-fluid">
+        <a class="nav-link page-animation navbar-brand-logo" href="{% url 'index' %}">
+            <img src="{% static 'images/logo.svg' %}" alt="Logo"/>
+            <span>CHAMPIFY</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link page-animation" href="{% url 'listings' %}?navbar_search=false">
+                        {% if is_organizer %}
+                            Соревнования организатора
+                        {% else %}
+                            Соревнования
+                        {% endif %}
+                    </a>
+                </li>
+                {% if is_organizer %}
+                <li class="nav-item">
+                    <a class="nav-link page-animation" href="{% url 'new' %}">Новое соревнование</a>
+                </li>
+                {% endif %}
+                {% if is_captain %}
+                <li class="nav-item">
+                    <a class="nav-link page-animation" href="{% url 'captain_tourney_listings' %}">
+                        Мои заявки на соревнования
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+            <form class="form-inline nav-form" action="{% url 'listings' %}" method="GET">
+                <div class="form-group">
+                    <input size="50" type="search" class="form-control" name="search" placeholder="Поиск соревнований">
+                    <input type="hidden" name="navbar_search" value="true">
+                </div>
+                <button type="submit" class="btn btn-outline-light">Поиск</button>
+            </form>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link page-animation" href="{% url 'profile' %}">
+                        Профиль
+                        {% if is_organizer %}
+                            организатора
+                        {% elif is_captain %}
+                        {% endif %}
+                    </a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link page-animation login-btn" href="{% url 'login' %}">Вход</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-animation register-btn" href="{% url 'register' %}">Регистрация</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Основное содержимое страницы-->
+<div class="page" id="animation-page">
+    {% block body %}
+    {% endblock %}
+</div>
+
+</body>
+</html>

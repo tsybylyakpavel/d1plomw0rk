@@ -1,0 +1,67 @@
+<div class="container custom-modal match-form-container" style="max-width: 600px;">
+    <h1 class="text-center mt-2">Матч #{{ match_id }}</h1>
+    <form class="m-3" method="post">
+        {% csrf_token %}
+        {% if can_edit > 1 and user.is_authenticated and user == tourney_creator %}
+            <input type="hidden" id="tourney_id" name="tourney_id" value="{{ tourney_id }}">
+            <input type="hidden" id="match_id" name="match_id" value="{{ match_id }}"> 
+            <input type="hidden" id="team1_id" name="team1_id" value="{{ team1_id }}">
+            <input type="hidden" id="team2_id" name="team2_id" value="{{ team2_id }}">
+
+            <div class="match-form-group">
+                <label for="edit-names-1" class="match-form-label">Команда 1:</label>
+                <input type="text" maxlength="18" name="edit-names-1" id="edit-names-1" class="form-control match-form-name" value="{{ team1 }}" required>
+                <label for="team1_score" class="match-form-label">Результат:</label>
+                <input type="number" name="team1_score" id="team1_score" class="form-control match-form-score" min="0" value="{{ result_team1 }}">
+                <input class="form-check-input" type="radio" value="team1" id="team1" name="winner" {% if winner == 'team1' %}checked{% endif %}>
+            </div>
+
+            <div class="match-form-group">
+                <label for="edit-names-2" class="match-form-label">Команда 2:</label>
+                <input type="text" maxlength="18" name="edit-names-2" id="edit-names-2" class="form-control match-form-name" value="{{ team2 }}" required>
+                <label for="team2_score" class="match-form-label">Результат:</label>
+                <input type="number" name="team2_score" id="team2_score" class="form-control match-form-score" min="0" value="{{ result_team2 }}">
+                <input class="form-check-input ml-5" type="radio" value="team2" id="team2" name="winner" {% if winner == 'team2' %}checked{% endif %}>
+            </div>
+
+            <div class="match-form-group">
+                <label class="form-check-label match-form-label" for="none">Не изменять победителя</label>
+                <input class="form-check-input ml-5" type="radio" value="none" id="none" name="winner" {% if winner == 'none' %}checked{% endif %}>
+            </div>
+
+            <div class="match-form-group">
+                <label class="form-check-label match-form-label" for="match_date">Дата матча:</label>
+                {% if date != "0" %}
+                <input type="datetime-local" id="match_date" value="{{ date|date:'Y-m-d\TH:i' }}" name="match_date" class="form-control">
+                {% else %}
+                <input type="datetime-local" id="match_date" name="match_date" class="form-control">
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+        {% else %}
+            <div class="match-form-group">
+                <label for="team1" class="match-form-label">Команда 1:</label>
+                <input type="text" name="team1" id="team1" class="form-control match-form-name" value="{{ team1 }}" disabled>
+                <label for="team1_score" class="match-form-label">Результат:</label>
+                <input type="number" name="team1_score" id="team1_score" class="form-control match-form-score" value="{{ result_team1 }}" disabled>
+            </div>
+
+            <div class="match-form-group">
+                <label for="team2" class="match-form-label">Команда 2:</label>
+                <input type="text" name="team2" id="team2" class="form-control match-form-name" value="{{ team2 }}" disabled>
+                <label for="team2_score" class="match-form-label">Результат:</label>
+                <input type="number" name="team2_score" id="team2_score" class="form-control match-form-score" value="{{ result_team2 }}" disabled>
+            </div>
+
+            <div class="match-form-group">
+                <label class="form-check-label match-form-label" for="match_date">Дата матча:</label>
+                <input type="datetime-local" id="match_date" name="match_date" class="form-control" value="{{ date|date:'Y-m-d\TH:i' }}" disabled>
+            </div>
+
+            {% if user.is_authenticated and user == tourney_creator %}
+                <p class="text-danger">Вы не можете редактировать матч, пока не определены все участники.</p>
+            {% endif %}
+        {% endif %}
+    </form>
+</div>

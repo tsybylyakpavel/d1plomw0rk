@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block body %}
+<div class="container mt-4">
+    <form method="GET" action="{% url 'listings' %}">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="input-group" style="max-width: 600px;">
+                <input type="text" class="form-control" placeholder="Поиск соревнований" name="search" value="{{ request.GET.search }}">
+                <input type="hidden" name="navbar_search" value="{{ request.GET.navbar_search }}">
+                <button class="btn btn-primary" type="submit">Поиск</button>
+            </div>
+            <div class="input-group" style="max-width: 300px;">
+                <select class="form-select" name="sport" onchange="this.form.submit()">
+                    <option value="">Все виды спорта</option>
+                    <option value="football" {% if request.GET.sport == 'football' %}selected{% endif %}>Футбол</option>
+                    <option value="tennis" {% if request.GET.sport == 'tennis' %}selected{% endif %}>Теннис</option>
+                    <option value="boxing" {% if request.GET.sport == 'boxing' %}selected{% endif %}>Бокс</option>
+                    <option value="badminton" {% if request.GET.sport == 'badminton' %}selected{% endif %}>Бадминтон</option>
+                    <option value="volleyball" {% if request.GET.sport == 'volleyball' %}selected{% endif %}>Волейбол</option>
+                    <option value="basketball" {% if request.GET.sport == 'basketball' %}selected{% endif %}>Баскетбол</option>
+                    <option value="handball" {% if request.GET.sport == 'handball' %}selected{% endif %}>Гандбол</option>
+                    <option value="esports" {% if request.GET.sport == 'esports' %}selected{% endif %}>Киберспорт</option>
+                    <option value="hockey" {% if request.GET.sport == 'hockey' %}selected{% endif %}>Хоккей</option>
+                    <option value="rugby" {% if request.GET.sport == 'rugby' %}selected{% endif %}>Регби</option>
+                </select>
+            </div>
+        </div>
+    </form>
+    
+    <div class="grid-container">
+        {% for tourney in tourneys %}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <h4 class="card-title">{{ tourney.name }}</h4>
+                <p class="m-gone"><strong>Организатор: </strong><strong>{{ tourney.user.profile.organization_name }}</strong></p>
+                <p class="m-gone">Количество команд: {{ tourney.num_teams }}</p>
+                <p class="m-gone">Формат проведения: {% if tourney.tournament_type == 'SE' %}Олимпийская система{% else %}С двойным выбыванием{% endif %}</p>
+                <p class="m-gone">Вид спорта:
+                    {% if tourney.sport == 'football' %}
+                        Футбол
+                    {% elif tourney.sport == 'tennis' %}
+                        Теннис
+                    {% elif tourney.sport == 'boxing' %}
+                        Бокс
+                    {% elif tourney.sport == 'badminton' %}
+                        Бадминтон
+                    {% elif tourney.sport == 'volleyball' %}
+                        Волейбол
+                    {% elif tourney.sport == 'basketball' %}
+                        Баскетбол
+                    {% elif tourney.sport == 'handball' %}
+                        Гандбол
+                    {% elif tourney.sport == 'esports' %}
+                        Киберспорт
+                    {% elif tourney.sport == 'hockey' %}
+                        Хоккей
+                    {% elif tourney.sport == 'rugby' %}
+                        Регби
+                    {% endif %}
+                </p>
+                <p>Дата проведения: {{ tourney.start_date }} - {{ tourney.end_date }}</p>
+                <div class="button-group-horizontal">
+                    <a href="{% url 'tourney' tourney.id %}" class="btn btn-primary listing-btn page-animation">Открыть</a>
+                    {% if is_organizer and user == tourney.user %}
+                        <a href="{% url 'edit' tourney.id %}" class="btn btn-secondary listing-btn page-animation">Редактировать</a>
+                        <form id="delete-form-{{ tourney.id }}" method="POST" action="{% url 'delete_tourney' tourney.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="button" onclick="showConfirmDialog('{{ tourney.id }}')" class="btn btn-danger listing-btn">Удалить</button>
+                        </form>
+                    {% elif is_captain %}
+                        {% if not existing_applications|get_item:tourney.id %}
+                            <a href="{% url 'apply_for_tourney' tourney.id %}" class="btn btn-success listing-btn page-animation">Подать заявку</a>
+                        {% else %}
+                            <button class="btn btn-secondary listing-btn" disabled>Заявка подана</button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-3 mb-1">
+        {% if tourneys.has_previous %}
+            <a class="btn btn-outline-dark" href="?page=1">Первая</a>
+            <a class="btn btn-outline-dark" href="?page={{ tourneys.previous_page_number }}">Предыдущая</a>
+        {% else %}
+            <button class="btn btn-outline-dark" disabled>Первая</button>
+            <button class="btn btn-outline-dark" disabled>Предыдущая</button>
+        {% endif %}
+
+        Страница: {{ tourneys.number }} из {{ tourneys.paginator.num_pages }}
+
+        {% if tourneys.has_next %}
+            <a class="btn btn-outline-dark" href="?page={{ tourneys.next_page_number }}">Следующая</a>
+            <a class="btn btn-outline-dark" href="?page={{ tourneys.paginator.num_pages }}">Последняя</a>
+        {% else %}
+            <button class="btn btn-outline-dark" disabled>Следующая</button>
+            <button class="btn btn-outline-dark" disabled>Последняя</button>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function showConfirmDialog(tourney_id) {
+        if (confirm('Вы уверены, что хотите удалить это соревнование?')) {
+            document.getElementById('delete-form-' + tourney_id).submit();
+        }
+    }
+</script>
+{% endblock %}

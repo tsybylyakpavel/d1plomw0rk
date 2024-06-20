@@ -1,0 +1,19 @@
+<!-- Главная страница -->
+
+{% extends 'base2.html' %}
+{% load static %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <div class="image-container"></div> 
+    <div class="content-left">
+        <h1 class="home-title">Добро пожаловать в Champify!</h1>
+        <p class="home-description">Ваш универсальный инструмент для простой и удобной организации и управления спортивными соревнованиями и турнирами.</p>
+        <a href="{% url 'new' %}" class="start-tournament-btn">Создать соревнование</a>
+    </div>
+</div>
+{% endblock %}

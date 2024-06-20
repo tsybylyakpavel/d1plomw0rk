@@ -1,0 +1,50 @@
+<!-- Подача заявки на соревнование -->
+{% extends "base.html" %}
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Подать заявку на соревнование:<br> {{ tourney.name }}</h1>
+    <form method="post" class="p-4 bg-light shadow-sm rounded">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="team_name" class="form-label fw-bold">Название команды</label>
+            <input type="text" class="form-control" id="team_name" name="team_name" placeholder="Введите название команды" required>
+        </div>
+        <div id="members">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Участники команды</label>
+                <div class="d-flex mb-2 align-items-center">
+                    <label class="form-label me-2">1.</label>
+                    <input type="text" class="form-control me-2" name="member_last_name" placeholder="Фамилия" required>
+                    <input type="text" class="form-control me-2" name="member_first_name" placeholder="Имя" required>
+                    <input type="text" class="form-control me-2" name="member_middle_name" placeholder="Отчество" required>
+                    <input type="date" class="form-control" name="member_birthdate" placeholder="Дата рождения" required>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3 text-center">
+            <button type="button" class="btn btn-outline-success" onclick="addMember()">Добавить участника</button>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Подать заявку</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    let memberCount = 1;
+
+    function addMember() {
+        memberCount++;
+        var memberDiv = document.createElement('div');
+        memberDiv.classList.add('d-flex', 'mb-2', 'align-items-center');
+        memberDiv.innerHTML = `
+            <label class="form-label me-2">${memberCount}.</label>
+            <input type="text" class="form-control me-2" name="member_last_name" placeholder="Фамилия" required>
+            <input type="text" class="form-control me-2" name="member_first_name" placeholder="Имя" required>
+            <input type="text" class="form-control me-2" name="member_middle_name" placeholder="Отчество" required>
+            <input type="date" class="form-control" name="member_birthdate" placeholder="Дата рождения" required>
+        `;
+        document.getElementById('members').appendChild(memberDiv);
+    }
+</script>
+{% endblock %}
