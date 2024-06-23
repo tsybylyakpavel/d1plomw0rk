@@ -21,13 +21,21 @@ class CustomLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super(CustomLoginForm, self).__init__(*args, **kwargs)
         self.label_suffix = ""  # Убирает двоеточие после метки
+        self.fields['username'].label = "Логин"  # Изменяет метку поля "username"
         self.fields['remember_me'].widget.attrs.update({'class': 'form-check-input'})
+
+    def confirm_login_allowed(self, user):
+        if user.profile.is_verified == False and user.groups.filter(name='Организатор').exists():
+            raise ValidationError(
+                "Ваш аккаунт еще не верифицирован. Пожалуйста, свяжитесь с администрацией для прохождения верификации.",
+                code='unverified',
+            )
 
     def get_user(self):
         user = super(CustomLoginForm, self).get_user()
         user.remember_me = self.cleaned_data.get('remember_me')
         return user
-
+    
 class CustomUserCreationForm(UserCreationForm):
     ACCOUNT_TYPE_CHOICES = [
         ('organizer', 'Организатор'),
@@ -44,6 +52,12 @@ class CustomUserCreationForm(UserCreationForm):
     organization_name = forms.CharField(
         required=False,
         label='Название организации',
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        help_text='Обязательное поле для организаторов.'
+    )
+    phone_number = forms.CharField(
+        required=True,
+        label='Номер телефона',
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         help_text='Обязательное поле для организаторов.'
     )
@@ -74,7 +88,9 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("account_type", "organization_name", "first_name", "last_name", "username", "email", "password1", "password2")
+        fields = ("account_type", "organization_name", "phone_number", "first_name", "last_name", "email", "username", "password1", "password2")
+
+    field_order = ["account_type", "organization_name", "phone_number", "first_name", "last_name", "email", "username", "password1", "password2"]
 
     def __init__(self, *args, **kwargs):
         super(CustomUserCreationForm, self).__init__(*args, **kwargs)
@@ -94,6 +110,12 @@ class CustomUserCreationForm(UserCreationForm):
             raise ValidationError("Организация с таким названием уже существует.")
         return organization_name
 
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        if Profile.objects.filter(phone_number=phone_number).exists():
+            raise ValidationError("Пользователь с таким номером телефона уже существует.")
+        return phone_number
+
     def save(self, commit=True):
         user = super(CustomUserCreationForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
@@ -102,7 +124,11 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
             if self.cleaned_data["account_type"] == "organizer":
-                Profile.objects.create(user=user, organization_name=self.cleaned_data["organization_name"])
+                Profile.objects.create(
+                    user=user,
+                    organization_name=self.cleaned_data["organization_name"],
+                    phone_number=self.cleaned_data["phone_number"]
+                )
             else:
                 Profile.objects.create(user=user)
         return user

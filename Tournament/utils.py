@@ -492,7 +492,7 @@ def shuffle_teams(tourney):
 def generate_round_robin_schedule(tourney, teams):
     num_teams = len(teams)
     if num_teams % 2:
-        teams.append(None)  # Добавить фиктивную команду, если количество команд нечетное
+        teams.append(None)
 
     schedule = []
     num_days = num_teams - 1
@@ -512,6 +512,6 @@ def generate_round_robin_schedule(tourney, teams):
                 )
                 matches.append(match)
         teams.insert(1, teams.pop())
-        schedule.extend(matches)  # Используйте extend вместо append для добавления списка
+        schedule.extend(matches)
 
     return schedule

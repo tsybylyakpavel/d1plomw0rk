@@ -2,6 +2,17 @@
 {% extends "base.html" %}
 {% load static %}
 {% block body %}
+<style>
+    .profile-btn {
+        margin-bottom: 0;
+    }
+    .btn {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: normal;
+    }
+</style>
+
 <section class="profile-container mt-3">
     <div class="profile-card shadow-lg">
         <div class="profile-card-body text-center">
@@ -17,6 +28,7 @@
             <h2 class="profile-subtitle card-subtitle mb-2 text-muted">{{ user.username }}</h2>
             {% if is_organizer %}
                 <p class="profile-text card-text">Название организации: {{ user.profile.organization_name }}</p>
+                <p class="profile-text card-text">Телефон: {{ user.profile.phone_number }}</p>
             {% else %}
                 <p class="profile-text card-text">Имя: {{ user.first_name }}</p>
                 <p class="profile-text card-text">Фамилия: {{ user.last_name }}</p>
@@ -25,10 +37,13 @@
             <p class="profile-text card-text">Последний вход: {{ user.last_login }}</p>
             <p class="profile-text card-text">Дата регистрации: {{ user.date_joined }}</p>
             
-            <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <button class="profile-btn btn btn-danger" type="submit">Выйти</button>
-            </form>
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <a href="{% url 'edit_profile' %}" class="btn btn-primary profile-btn me-2">Редактировать</a>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-danger profile-btn" type="submit">Выйти</button>
+                </form>
+            </div>
         </div>
     </div>
 </section>

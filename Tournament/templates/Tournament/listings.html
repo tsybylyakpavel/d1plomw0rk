@@ -59,7 +59,8 @@
                         Регби
                     {% endif %}
                 </p>
-                <p>Дата проведения: {{ tourney.start_date }} - {{ tourney.end_date }}</p>
+                <p class="m-gone">Дата проведения: {{ tourney.start_date }} - {{ tourney.end_date }}</p>
+                <p>Прием заявок: {{ tourney.application_start_date }} - {{ tourney.application_end_date }}</p>
                 <div class="button-group-horizontal">
                     <a href="{% url 'tourney' tourney.id %}" class="btn btn-primary listing-btn page-animation">Открыть</a>
                     {% if is_organizer and user == tourney.user %}

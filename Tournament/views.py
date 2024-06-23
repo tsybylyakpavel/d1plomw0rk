@@ -6,11 +6,33 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.core.paginator import Paginator
 from .models import TournamentObject, Team, Match, Profile, Application, TeamMember
-from .forms import CustomUserCreationForm, RulesUploadForm
+from .forms import CustomUserCreationForm, RulesUploadForm, CustomLoginForm
 from .utils import Rounds, LosersRounds, single_tourney_update_future_rounds, double_tourney_update_future_rounds, shuffle_teams, generate_round_robin_schedule
 from django.http import JsonResponse
 from django.contrib.auth.models import Group
 from django.contrib.auth import login
+from django.contrib.auth.views import LoginView
+from django.core.exceptions import ValidationError
+from django.contrib.auth import login as auth_login
+from django.contrib import messages
+from django.utils import timezone
+
+
+class CustomLoginView(LoginView):
+    form_class = CustomLoginForm
+    template_name = 'User/login.html'
+
+    def form_valid(self, form):
+        user = form.get_user()
+        if not user.profile.is_verified and user.groups.filter(name='Organizer').exists():
+            form.add_error(None, ValidationError(
+                "Ваш аккаунт еще не верифицирован. Пожалуйста, свяжитесь с администрацией для прохождения верификации.",
+                code='unverified',
+            ))
+            return self.form_invalid(form)
+        auth_login(self.request, form.get_user())
+        return redirect(self.get_success_url())
+
 
 # Главная страница
 def home(request):
@@ -317,6 +339,7 @@ def edit_match(request, match_not_unique_id, tourney_id):
     }
     return render(request, 'Tournament/editmatch.html', context)
 
+
 # Профиль пользователя
 @login_required
 def profile(request):
@@ -330,6 +353,30 @@ def profile(request):
     }
     return render(request, 'User/profile.html', context)
 
+# Редактирование профиля
+def edit_profile(request):
+    return render(request, 'User/edit_profile.html')
+
+
+# Обновление данных профиля
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        user.first_name = request.POST['first_name']
+        user.last_name = request.POST['last_name']
+        user.email = request.POST['email']
+        user.save()
+        
+        if hasattr(user, 'profile'):
+            user.profile.organization_name = request.POST.get('organization_name', user.profile.organization_name)
+            user.profile.phone_number = request.POST.get('phone_number', user.profile.phone_number)
+            user.profile.save()
+        
+        messages.success(request, 'Ваш профиль был успешно обновлен!')
+        return redirect('profile')
+    return render(request, 'User/edit_profile.html')
+
 # Регистрация
 def register(request):
     if request.method == 'POST':
@@ -339,11 +386,13 @@ def register(request):
             account_type = form.cleaned_data.get('account_type')
             if account_type == 'organizer':
                 group = Group.objects.get(name='Organizer')
+                user.groups.add(group)
+                return redirect('verification_pending')
             elif account_type == 'captain':
                 group = Group.objects.get(name='Captain')
-            user.groups.add(group)
-            login(request, user)
-            return redirect('index')
+                user.groups.add(group)
+                auth_login(request, user)
+                return redirect('index')
     else:
         form = CustomUserCreationForm()
     return render(request, 'User/register.html', {'form': form})
@@ -388,7 +437,6 @@ def generate_schedule(request, tourney_id):
     return JsonResponse({'success': False})
 
 
-
 # Подача заявки на участие в соревновании
 @login_required
 def apply_for_tourney(request, tourney_id):
@@ -396,6 +444,12 @@ def apply_for_tourney(request, tourney_id):
         raise PermissionDenied("Только представители команд могут подавать заявки на участие.")
 
     tourney = get_object_or_404(TournamentObject, pk=tourney_id)
+    
+    # Проверка срока приема заявок
+    current_date = timezone.now().date()
+    if not (tourney.application_start_date <= current_date <= tourney.application_end_date):
+        messages.error(request, 'Срок подачи заявок истек или еще не начался.')
+        return redirect('tourney', tourney_id=tourney_id)
     
     # Проверка на количество заявок
     if Application.objects.filter(tournament=tourney, status=Application.ACCEPTED).count() >= tourney.num_teams:
@@ -416,7 +470,6 @@ def apply_for_tourney(request, tourney_id):
                 status=Application.PENDING
             )
             
-           
             temp_team = Team.objects.create(
                 name=team_name,
                 user=request.user,
@@ -536,3 +589,7 @@ def generate_round_robin(request, tourney_id):
             )
 
     return redirect('tourney', tourney_id=tourney_id)
+
+# Проверка верификации
+def verification_pending(request):
+    return render(request, 'User/verification_pending.html')

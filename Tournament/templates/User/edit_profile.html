@@ -1,0 +1,45 @@
+<!-- edit_profile.html -->
+{% extends "base.html" %}
+
+{% block title %}Редактировать профиль{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <h2 class="card-title text-center">Редактировать профиль</h2>
+            <form method="post" action="{% url 'update_profile' %}">
+                {% csrf_token %}
+                {% if not is_organizer %}
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">Имя</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="last_name" class="form-label">Фамилия</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}" required>
+                </div>
+                {% endif %}
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                </div>
+                {% if is_organizer %}
+                <div class="mb-3">
+                    <label for="organization_name" class="form-label">Название организации</label>
+                    <input type="text" class="form-control" id="organization_name" name="organization_name" value="{{ user.profile.organization_name }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="phone_number" class="form-label">Телефон</label>
+                    <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ user.profile.phone_number }}" required>
+                </div>
+                {% endif %}
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary me-2">Сохранить изменения</button>
+                    <a href="{% url 'profile' %}" class="btn btn-secondary">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

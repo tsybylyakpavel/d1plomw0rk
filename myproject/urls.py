@@ -19,7 +19,9 @@ urlpatterns = [
     path('tourney/delete_tourney/<int:tourney_id>/', tournament_views.delete_tourney, name="delete_tourney"),
     path('tourney/generate_schedule/<int:tourney_id>/', tournament_views.generate_schedule, name='generate_schedule'),
     path('accounts/profile/', tournament_views.profile, name="profile"),
-    path('login/', auth_views.LoginView.as_view(template_name='User/login.html', form_class=tournament_forms.CustomLoginForm), name='login'),
+    path('profile/edit/', tournament_views.edit_profile, name='edit_profile'),
+    path('profile/update/', tournament_views.update_profile, name='update_profile'),
+    path('login/', tournament_views.CustomLoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='User/logout.html'), name='logout'),
     path('register/', tournament_views.register, name='register'),
     path('tourney/<int:tourney_id>/edit/', tournament_views.edit_tourney, name='edit'),
@@ -28,6 +30,7 @@ urlpatterns = [
     path('captain/tourneys/', tournament_views.captain_tourney_listings, name='captain_tourney_listings'),
     path('tourney/<int:tourney_id>/upload_rules/', tournament_views.upload_rules, name='upload_rules'),
     path('generate_round_robin/<int:tourney_id>/', tournament_views.generate_round_robin, name='generate_round_robin'),
+    path('verification_pending/', tournament_views.verification_pending, name='verification_pending'),
 ]
 
 if settings.DEBUG:

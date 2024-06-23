@@ -6,7 +6,9 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     organization_name = models.CharField(max_length=255, unique=True, null=True, blank=True)
-
+    is_verified = models.BooleanField(default=False)  # Новое поле для статуса верификации
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    
     def __str__(self):
         return self.user.username
 
@@ -52,6 +54,8 @@ class TournamentObject(models.Model):
     sport = models.CharField(max_length=20, choices=SPORTS_TYPES, default=FOOTBALL)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
+    application_start_date = models.DateField(null=True, blank=True)
+    application_end_date = models.DateField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tourney')
     archived = models.BooleanField(default=False)
     winner = models.CharField(max_length=100, default="none")
@@ -66,6 +70,10 @@ class TournamentObject(models.Model):
 
     def __str__(self):
         return self.name if self.name else "Пусто"
+    
+    class Meta:
+        verbose_name = "tournament"  # Название модели в единственном числе
+        verbose_name_plural = "tournaments"  # Название модели во множественном числе
 
 # Модель для команды
 class Team(models.Model):
@@ -77,7 +85,7 @@ class Team(models.Model):
         return self.name if self.name else "Пусто"
 
 # Модель для участника команды
-# Модель для участника команды
+
 class TeamMember(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='members')
     first_name = models.CharField(max_length=255)
@@ -98,8 +106,8 @@ class Match(models.Model):
     team2 = models.ForeignKey(Team, related_name='matches_as_team2', on_delete=models.CASCADE, null=True)
     tournament = models.ForeignKey(TournamentObject, on_delete=models.CASCADE, related_name='matches')
     round = models.IntegerField()
-    result_team1 = models.CharField(max_length=10, null=True, blank=True)
-    result_team2 = models.CharField(max_length=10, null=True, blank=True)
+    result_team1 = models.IntegerField(null=True, blank=True)  # Изменено на IntegerField
+    result_team2 = models.IntegerField(null=True, blank=True) 
     winner = models.CharField(max_length=10, choices=[('team1', 'Team 1'), ('team2', 'Team 2'), ('none', 'None')], default='none')
 
     class Meta:

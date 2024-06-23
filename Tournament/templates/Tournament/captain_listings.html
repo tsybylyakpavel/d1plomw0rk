@@ -42,7 +42,8 @@
                         Регби
                     {% endif %}
                 </p>
-                <p>Дата проведения: {{ item.tourney.start_date }} - {{ item.tourney.end_date }}</p>
+                <p class="m-gone">Дата проведения: {{ item.tourney.start_date }} - {{ item.tourney.end_date }}</p>
+                <p>Прием заявок: {{ item.tourney.application_start_date }} - {{ item.tourney.application_end_date }}</p>
                 <p>Статус заявки: 
                     {% if item.status == 'P' %}
                         В ожидании
